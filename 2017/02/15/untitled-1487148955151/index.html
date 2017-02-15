@@ -1,0 +1,680 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Developer iOS android" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="[上一篇](http://www.jianshu.com/p/726dda37a94e)中讲到Message中的一些特性，本次主要讲下Notification的特性
+
+iOS10相对于之前的版本，主要是开发者可以使用Extension的形式修改和展示内容，主要是UNNotificationServiceExtension和UNNotificationContentExtension。同时也添加了其">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IOS 10 新特性以及介绍-Notifications">
+<meta property="og:url" content="http://yoursite.com/2017/02/15/untitled-1487148955151/index.html">
+<meta property="og:site_name" content="I'AM Developer">
+<meta property="og:description" content="[上一篇](http://www.jianshu.com/p/726dda37a94e)中讲到Message中的一些特性，本次主要讲下Notification的特性
+
+iOS10相对于之前的版本，主要是开发者可以使用Extension的形式修改和展示内容，主要是UNNotificationServiceExtension和UNNotificationContentExtension。同时也添加了其">
+<meta property="og:updated_time" content="2017-02-15T08:57:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="IOS 10 新特性以及介绍-Notifications">
+<meta name="twitter:description" content="[上一篇](http://www.jianshu.com/p/726dda37a94e)中讲到Message中的一些特性，本次主要讲下Notification的特性
+
+iOS10相对于之前的版本，主要是开发者可以使用Extension的形式修改和展示内容，主要是UNNotificationServiceExtension和UNNotificationContentExtension。同时也添加了其">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> IOS 10 新特性以及介绍-Notifications | I'AM Developer </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=60747891";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">I'AM Developer</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                IOS 10 新特性以及介绍-Notifications
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-15T16:55:55+08:00" content="2017-02-15">
+              2017-02-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/02/15/untitled-1487148955151/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/15/untitled-1487148955151/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <pre>[上一篇](http://www.jianshu.com/p/726dda37a94e)中讲到Message中的一些特性，本次主要讲下Notification的特性</pre>
+
+<p>iOS10相对于之前的版本，主要是开发者可以使用Extension的形式修改和展示内容，主要是<code>UNNotificationServiceExtension</code>和<code>UNNotificationContentExtension</code>。同时也添加了其他方面的支持，例如<code>UNNotificationTrigger</code>、<code>UNNotificationAttachment</code>、<code>UNNotificationAction</code>。本次讲的主要有以下几点:</p>
+<ul>
+<li>UNNotificationTrigger（通知触发条件设定）</li>
+<li>UNNotificationAttachment （通知附件）</li>
+<li>UNNotificationContentExtension （通知内容扩展）</li>
+<li>UNNotificationServiceExtension （通知服务扩展）</li>
+<li>UNNotificationAction （通知响应事件）</li>
+</ul>
+<p>##1、UNNotificationTrigger（通知触发条件设定）<br>主要是针对本地通知触发时机的设置，可以使用下面方式设置:</p>
+<ol>
+<li>UNPushNotificationTrigger:这个是苹果通知服务的 Trigger，对外没有暴露任何接口属性，不需要开发者创建，由系统创建。</li>
+<li>UNTimeIntervalNotificationTrigger(时间触发器):通过初始化方法设置通知的timeInterval（触发间隔）<br>和repeats（是否重复触发），若 repeats 设置为 false，通知将在 timeInterval 之后被推送。</li>
+<li>UNCalendarNotificationTrigger(日期触发器):类似 UNTimeIntervalNotificationTrigger，也是时间触发器，只不过初始化时第一个参数为 DateComponents类型，可设置具体的触发时间比如8:00 AM等，也可设置是否重复触发。</li>
+<li>UNLocationNotificationTrigger(位置触发器):通过设置 CLRegion类型参数设置位置信息，当用户处于某一区域时，自动推送通知。</li>
+</ol>
+<p>使用:<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">//设置Notification内容</div><div class="line">    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];</div><div class="line">    content.title = [NSString localizedUserNotificationStringForKey:@&quot;title!&quot; arguments:nil];</div><div class="line">    content.body = [NSString localizedUserNotificationStringForKey:@&quot;body&quot; arguments:nil];</div><div class="line">    content.subtitle = [NSString localizedUserNotificationStringForKey:@&quot;subtitle&quot; arguments:nil];</div><div class="line">    content.sound = [UNNotificationSound defaultSound];</div><div class="line">    </div><div class="line">    //初始化时间触发器</div><div class="line">    UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:10 repeats:NO];</div><div class="line">    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@&quot;Identifier&quot;</div><div class="line">                                                                          content:content</div><div class="line">                                                                          trigger:trigger];</div><div class="line">    </div><div class="line">    // 请求计划推送</div><div class="line">    [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) &#123;</div><div class="line">        if(error)</div><div class="line">        &#123;</div><div class="line">            NSLog(@&quot;%@&quot;,error);</div><div class="line">        &#125;</div><div class="line">    &#125;];</div></pre></td></tr></table></figure></p>
+<p>##2、UNNotificationAttachment（通知附件）<br>苹果所支持的推送附件类型包含视频，音频，图片，苹果的文档中对文件的类型和大小做了如下限制：<a href="https://developer.apple.com/reference/usernotifications/unnotificationattachment" target="_blank" rel="external">传送门</a><br>使用说明：</p>
+<ul>
+<li><p>本地通知：</p>
+<blockquote>
+<p>设置<code>UNMutableNotificationContent</code>如下属性</p>
+<blockquote>
+ <figure class="highlight plain"><figcaption><span>Optional array of attachments.</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@property (NS_NONATOMIC_IOSONLY, copy) NSArray &lt;UNNotificationAttachment *&gt; *attachments</div></pre></td></tr></table></figure>
+</blockquote>
+</blockquote>
+</li>
+<li><p>远程通知:</p>
+<blockquote>
+<p>通过URL地址下载资源，然后将资源设置到<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; 示例代码: </div><div class="line"></div><div class="line"></div><div class="line"> ``` </div><div class="line">- (void)handlerImageWith:(NSString *)attachUrl&#123;</div><div class="line">    </div><div class="line">    [self downloadFileAndSave:[NSURL URLWithString:attachUrl] handler:^(NSURL *localUrl) &#123;</div><div class="line">        if (localUrl)&#123;</div><div class="line">            UNNotificationAttachment *attachment = [UNNotificationAttachment attachmentWithIdentifier:@&quot;image_download&quot; URL:localUrl options:nil error:nil];</div><div class="line">            self.bestAttemptContent.attachments = @[attachment];</div><div class="line">        &#125;</div><div class="line">        self.contentHandler(self.bestAttemptContent);</div><div class="line">    &#125;];</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)downloadFileAndSave:(NSURL *)url handler:(void (^)(NSURL *))handler&#123;</div><div class="line">    NSURLSession *session = [NSURLSession sharedSession];</div><div class="line">    </div><div class="line">    NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithURL:url</div><div class="line">                                                        completionHandler:^(NSURL * _Nullable location,</div><div class="line">                                                                            NSURLResponse * _Nullable response,</div><div class="line">                                                                            NSError * _Nullable error) &#123;</div><div class="line">                                                            NSURL *localURL = nil;</div><div class="line">                                                            if(!error)&#123;</div><div class="line">                                                                NSString *caches = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];</div><div class="line">                                                                // response.suggestedFilename ： 建议使用的文件名，一般跟服务器端的文件名一致</div><div class="line">                                                                NSString *file = [caches stringByAppendingPathComponent:response.suggestedFilename];</div><div class="line">                                                                </div><div class="line">                                                                // 将临时文件剪切或者复制Caches文件夹</div><div class="line">                                                                NSFileManager *mgr = [NSFileManager defaultManager];</div><div class="line">                                                                </div><div class="line">                                                                // AtPath : 剪切前的文件路径</div><div class="line">                                                                // ToPath : 剪切后的文件路径</div><div class="line">                                                                [mgr moveItemAtPath:location.path toPath:file error:nil];</div><div class="line">                                                                </div><div class="line">                                                                if (file &amp;&amp; ![file  isEqualToString: @&quot;&quot;])</div><div class="line">                                                                &#123;</div><div class="line">                                                                    localURL = [NSURL URLWithString:[@&quot;file://&quot; stringByAppendingString:file]];</div><div class="line">                                                                &#125;</div><div class="line">                                                            &#125;</div><div class="line">                                                            handler(localURL);</div><div class="line">                                                        &#125;];</div><div class="line">    [downloadTask resume];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+</li>
+</ul>
+<p>注意事项:</p>
+<ul>
+<li>UNNotificationContent 的 attachments虽然是一个数组，但是系统只会展示第一个 attachment 对象的内容。不过你依然可以发送多个 attachments，然后在要展示的时候再重新安排它们的顺序，以显示最符合情景的图片或者视频。另外，你也可能会在自定义通知展示 UI 时用到多个 attachment。</li>
+<li>在当前 beta (iOS 10 beta 4) 中，serviceExtensionTimeWillExpire被调用之前，你有 30 秒时间来处理和更改通知内容。对于一般的图片来说，这个时间是足够的。但是如果你推送的是体积较大的视频内容，用户又恰巧处在糟糕的网络环境的话，很有可能无法及时下载完成。</li>
+<li>如果你想在远程推送来的通知中显示应用 bundle 内的资源的话，要注意 extension 的 bundle 和 app main bundle 并不是一回事儿。你可以选择将图片资源放到 extension bundle 中，也可以选择放在 main bundle 里。总之，你需要保证能够获取到正确的，并且你具有读取权限的 url。关于从 extension 中访问 main bundle，可以参看<a href="http://stackoverflow.com/questions/26189060/get-the-main-app-bundle-from-within-extension" target="_blank" rel="external">这篇回答</a>。</li>
+<li>系统在创建 attachement 时会根据提供的 url 后缀确定文件类型，如果没有后缀，或者后缀无法不正确的话，你可以在创建时通过 UNNotificationAttachmentOptionsTypeHintKey<br>来<a href="https://developer.apple.com/reference/usernotifications/unnotificationattachmentoptionstypehintkey" target="_blank" rel="external">指定资源类型</a>。</li>
+<li>如果使用的图片和视频文件不在你的 bundle 内部，它们将被移动到系统的负责通知的文件夹下，然后在当通知被移除后删除。如果媒体文件在 bundle 内部，它们将被复制到通知文件夹下。每个应用能使用的媒体文件的文件大小总和是有限制，超过限制后创建 attachment 时将抛出异常。可能的所有错误可以在 UNError中找到。</li>
+<li>你可以访问一个已经创建的 attachment 的内容，但是要注意权限问题。可以使用 startAccessingSecurityScopedResource来暂时获取以创建的 attachment 的访问权限。比如：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">if(notification.request.content.attachments &amp;&amp; notification.request.content.attachments.count &gt; 0)&#123;</div><div class="line">        NSURL *imageUrl = notification.request.content.attachments[0].URL;</div><div class="line">        if([imageUrl startAccessingSecurityScopedResource])&#123;</div><div class="line">            NSData *imageData = [NSData dataWithContentsOfURL:imageUrl];</div><div class="line">            UIImage *image = [[UIImage alloc] initWithData:imageData];</div><div class="line">            self.imageView.image = image;</div><div class="line">            [imageUrl stopAccessingSecurityScopedResource];</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>##3、UNNotificationContentExtension（通知内容扩展）<br>通知内容扩展需要新建一个 UNNotificationContentExtension Target，之后只需在 viewcontroller 的中实现相应的接口，即可以对 app 的通知页面进行自定义扩展，扩展主要用于自定义 UI。扩展页面样式可以在 plist 中配置，字段说明如下:</p>
+<ul>
+<li>UNNotificationExtensionCategory: 要让通知支持内容扩展，需要将通知的 categoryIdentifier（类型标示） 加入此处。</li>
+<li>UNNotificationExtensionDefaultContentHidden: 默认内容隐藏，如果设为 YES，则最下面通知 content 部分会隐藏。</li>
+<li>UNNotificationExtensionIntialContentSizeRation: 初始内容 Size 的比例。也可以在 viewDidLoad 中使用 self.preferredContentSize 直接设置 Size。</li>
+</ul>
+<p>使用说明:<br>远程和本地通知最终都可以使用此扩展自定义 UI，只需将通知的 categoryIdentifier（类型标示） 加入到 plist 中即可。</p>
+<ul>
+<li>本地推送时，确保设置的 content.categoryIdentifier（通知内容类型标示） 已加入 plist 中。</li>
+<li>远程推送，需要设置 category 字段，且确保值也已加入 plist 中。</li>
+</ul>
+<p>##4、UNNotificationServiceExtension （通知服务扩展）<br>UNNotificationServiceExtension 提供在远程推送将要被 push 出来前，处理推送显示内容的机会。此时可以对通知的 request.content 进行内容添加，如添加附件，userInfo 等。服务器推送实例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;aps&quot; : &#123;</div><div class="line">    &quot;alert&quot; : &#123;</div><div class="line">      &quot;title&quot; : &quot;title&quot;,</div><div class="line">      &quot;body&quot; : &quot;Your message Here&quot;      </div><div class="line">    &#125;,</div><div class="line">     // 开启可变内容</div><div class="line">    &quot;mutable-content&quot; : &quot;1&quot;,   </div><div class="line">    // 加入自定义数据，图片 url 路径</div><div class="line">    &quot;image&quot;:&quot;http://....jpg&quot;               </div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>示例代码:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler &#123;</div><div class="line">    self.contentHandler = contentHandler;</div><div class="line">    self.bestAttemptContent = [request.content mutableCopy];</div><div class="line">    NSDictionary *apsDic = [request.content.userInfo objectForKey:@&quot;aps&quot;];</div><div class="line">    NSString *attachUrl = [apsDic objectForKey:@&quot;image&quot;];</div><div class="line">    if(attachUrl)&#123;</div><div class="line">        [self handlerImageWith:attachUrl];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>##5、UNNotificationAction（通知响应事件）<br>代表一个响应通知的事件。可以为每个通知设置不同的交互事件。下拉推送通知或处在锁屏界面侧滑通知时，会出现交互按键。<br>交互事件主要分为以下两类：</p>
+<ul>
+<li><strong>UNNotificationAction：</strong><br>普通点击按键，可设置 identifier、 title 及 点击后的响应，例如：foreground 前台响应，destructive 点击后销毁通知，authenticationRequired 响应前是否需要解锁。甚至可以使用 UNNotificationAction + accessoryInputView 结合，达到加入自定义辅助输入控件的效果</li>
+<li><strong>UNTextInputNotificationAction：</strong><br>当然也可以直接使用系统类 UNTextInputNotificationAction 创建输入框，但是风格比较固定。</li>
+</ul>
+<p>示例代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (void)registerNotificationCategory&#123;</div><div class="line">    UNTextInputNotificationAction *inputAction = [UNTextInputNotificationAction actionWithIdentifier:@&quot;action_reply&quot; title:@&quot;回复&quot; options:UNNotificationActionOptionForeground];</div><div class="line">    UNNotificationAction *cancelAction = [UNNotificationAction actionWithIdentifier:@&quot;action_cancel&quot; title:@&quot;取消&quot; options:UNNotificationActionOptionDestructive];</div><div class="line">    </div><div class="line">    UNNotificationCategory *saySomething = [UNNotificationCategory categoryWithIdentifier:saySomethingCategory actions:@[inputAction,cancelAction] intentIdentifiers:@[] options:UNNotificationCategoryOptionCustomDismissAction];</div><div class="line">    [[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories:[NSSet setWithObject:saySomething]];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>响应处理：</strong></p>
+<ul>
+<li>若处于 UNNotificationContentExtension 通知扩展界面时，点击 【回复】按键会回调 UNNotificationContentExtension 扩展接口的方法：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// If implemented, the method will be called when the user taps on one</div><div class="line">// of the notification actions. The completion handler can be called</div><div class="line">// after handling the action to dismiss the notification and forward the</div><div class="line">// action to the app if necessary.</div><div class="line">- (void)didReceiveNotificationResponse:(UNNotificationResponse *)response completionHandler:(void (^)(UNNotificationContentExtensionResponseOption option))completion;&#123;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>如果不支持 UNNotificationContentExtension则点击【回复】回调 UNUserNotificationCenterDelegate 中的方法:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// The method will be called on the delegate when the user responded to the notification by opening the application, dismissing the notification or choosing a UNNotificationAction. The delegate must be set before the application returns from applicationDidFinishLaunching:.</div><div class="line">- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)())completionHandler&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>补充：iOS10中可以在前台中收到通知了，需要添加一下代码:</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">\\ notificationHandler实现UNUserNotificationCenterDelegate</div><div class="line">[[UNUserNotificationCenter currentNotificationCenter] setDelegate:self.notificationHandler];</div></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/15/untitled-1487148938673/" rel="next" title="iOS感应器之加速度计和陀螺仪(CoreMotion)">
+                <i class="fa fa-chevron-left"></i> iOS感应器之加速度计和陀螺仪(CoreMotion)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/15/untitled-1487149011198/" rel="prev" title="IOS 10 新特性以及介绍">
+                IOS 10 新特性以及介绍 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/02/15/untitled-1487148955151/"
+           data-title="IOS 10 新特性以及介绍-Notifications" data-url="http://yoursite.com/2017/02/15/untitled-1487148955151/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Developer Ops" />
+          <p class="site-author-name" itemprop="name">Developer Ops</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Developer Ops</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jaly19870729"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

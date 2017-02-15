@@ -1,0 +1,643 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Developer iOS android" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="前言：之前参加了一个比赛，里面主要涉及到VR图片拍摄和图片3D呈现，本次主要说说图片拍摄中使用到的陀螺仪和加速度计。
+
+1、什么是CoreMotionCoreMotion是一个专门处理Motion的框架，其中包含了两个部分加速度计和陀螺仪，在iOS4之前加速度计是由UIAccelerometer类来负责采集数据，现在一般都是用CoreMotion来处理加速度过程，不过由于UIAccelerome">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS感应器之加速度计和陀螺仪(CoreMotion)">
+<meta property="og:url" content="http://yoursite.com/2017/02/15/untitled-1487148938673/index.html">
+<meta property="og:site_name" content="I'AM Developer">
+<meta property="og:description" content="前言：之前参加了一个比赛，里面主要涉及到VR图片拍摄和图片3D呈现，本次主要说说图片拍摄中使用到的陀螺仪和加速度计。
+
+1、什么是CoreMotionCoreMotion是一个专门处理Motion的框架，其中包含了两个部分加速度计和陀螺仪，在iOS4之前加速度计是由UIAccelerometer类来负责采集数据，现在一般都是用CoreMotion来处理加速度过程，不过由于UIAccelerome">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1459528-96c8d31d6f8b4266.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1459528-ac3801256ae6b74b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1459528-5a5b094cd6a39871.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-02-15T08:55:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS感应器之加速度计和陀螺仪(CoreMotion)">
+<meta name="twitter:description" content="前言：之前参加了一个比赛，里面主要涉及到VR图片拍摄和图片3D呈现，本次主要说说图片拍摄中使用到的陀螺仪和加速度计。
+
+1、什么是CoreMotionCoreMotion是一个专门处理Motion的框架，其中包含了两个部分加速度计和陀螺仪，在iOS4之前加速度计是由UIAccelerometer类来负责采集数据，现在一般都是用CoreMotion来处理加速度过程，不过由于UIAccelerome">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1459528-96c8d31d6f8b4266.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> iOS感应器之加速度计和陀螺仪(CoreMotion) | I'AM Developer </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=60747891";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">I'AM Developer</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS感应器之加速度计和陀螺仪(CoreMotion)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-15T16:55:38+08:00" content="2017-02-15">
+              2017-02-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/02/15/untitled-1487148938673/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/15/untitled-1487148938673/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>前言：之前参加了一个比赛，里面主要涉及到VR图片拍摄和图片3D呈现，本次主要说说图片拍摄中使用到的陀螺仪和加速度计。</p>
+</blockquote>
+<h2 id="1、什么是CoreMotion"><a href="#1、什么是CoreMotion" class="headerlink" title="1、什么是CoreMotion"></a>1、什么是CoreMotion</h2><p>CoreMotion是一个专门处理Motion的框架，其中包含了两个部分加速度计和陀螺仪，在iOS4之前加速度计是由UIAccelerometer类来负责采集数据，现在一般都是用CoreMotion来处理加速度过程，不过由于UIAccelerometer比较简单，同样有人在使用。加速计由三个坐标轴决定，用户最常见的操作设备的动作移动，晃动手机(摇一摇)，倾斜手机都可以被设备检测到，加速计可以检测到线性的变化，陀螺仪可以更好的检测到偏转的动作，可以根据用户的动作做出相应的动作，iOS模拟器无法模拟以上动作，真机调试需要开发者账号。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1459528-96c8d31d6f8b4266.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>##2、CoreMotion作用<br>CoreMotion主要负责三种数据：加速度值，陀螺仪值，设备motion值。实际上，这个设备motion值就是通过加速度和旋转速度进行 fusing变换算出来的，基本原理后面会介绍。CoreMotion在系统中以单独的后台线程的方式去获得原始数据，并同时执行一些motion算法来提取更多的信息，然后呈献给应用层做进一步处理。CoreMotion框架包含有一个专门的Manager类，CMMotionManager，然后由这个manager去管理三种和运动相关的数据封装类，而 且，这些类都是CMLogItem类的子类，所以相关的motion数据都可以和发生的时间信息一起保存到对应文件中，有了时间戳，两个相邻数据之间的实 际更新时间就很容易得到了。这个东西是非常有用的，比如有些时候，你得到的是50Hz的采样数据，但希望知道的是每一秒加速度的平均值。</p>
+<p>##3、CoreMotion数据获取<br>CoreMotion中获取数据主要是两种方式:</p>
+<ul>
+<li>一种是Push，就是你提供一个线程管理器NSOperationQueue，再提供一个Block，这样，CoreMotion自动在每一个采样数据到来的时候回调这个Block，进行处理。在这中情况下，block中的操作会在你自己的主线程内执行。</li>
+</ul>
+<ul>
+<li>一种是 Pull，在这个方式里，你必须主动去像CMMotionManager要数据，这个数据就是最近一次的采样数据。你不去要，CMMotionManager就不会给你。当然，在这种情况下，CoreMotion所有的操作都在自己的后台线程中进行，不会有任何干扰你当前线程的行为。</li>
+</ul>
+<p>##4、加速计</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1459528-ac3801256ae6b74b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<ul>
+<li>Pull获取方式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">//判断加速计是否可用</div><div class="line">if ([_motionManager isAccelerometerAvailable]) &#123;    </div><div class="line">    // 设置加速计采样频率</div><div class="line">    [_motionManager setAccelerometerUpdateInterval:1 / 40.0];</div><div class="line">    [_motionManager startAccelerometerUpdates];</div><div class="line">&#125;else &#123;</div><div class="line">    NSLog(@&quot;设备不支持加速计&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">//获取数据</div><div class="line">CMAcceleration acceleration=_motionManager.accelerometerData.acceleration;</div><div class="line">NSLog(@&quot;%f---%f---%f&quot;,acceleration.x,acceleration.y,acceleration.z);</div></pre></td></tr></table></figure>
+<ul>
+<li>Push获取方式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//判断加速计是否可用</div><div class="line">if([_motionManager isAccelerometerAvailable]) &#123;</div><div class="line">    // 设置加速计频率</div><div class="line">    [_motionManager setAccelerometerUpdateInterval:1 / 40.0];</div><div class="line">    //开始采样数据</div><div class="line">    [_motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) &#123;</div><div class="line">        NSLog(@&quot;%f---%f&quot;,accelerometerData.acceleration.x,accelerometerData.acceleration.y);</div><div class="line">    &#125;];</div><div class="line">&#125; else&#123;</div><div class="line">    NSLog(@&quot;设备不支持加速计&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>##5、陀螺仪</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1459528-5a5b094cd6a39871.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<ul>
+<li>Pull获取方式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">//判断陀螺仪是否可用</div><div class="line">if ([_motionManager isGyroAvailable]) &#123;    </div><div class="line">    // 设置陀螺仪采样频率</div><div class="line">    [_motionManager setGyroUpdateInterval:1 / 40.0];</div><div class="line">    [_motionManager startGyroUpdates];</div><div class="line">&#125;else &#123;</div><div class="line">    NSLog(@&quot;设备不支持陀螺仪&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">//获取数据</div><div class="line">CMGyroData *gyroData=_motionManager.gyroData;</div><div class="line">NSLog(@&quot;%f---%f---%f&quot;,gyroData.rotationRate.x,gyroData.rotationRate.y,gyroData/rotationRate.z);</div></pre></td></tr></table></figure>
+<ul>
+<li>Push获取方式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//判断陀螺仪是否可用</div><div class="line">if([_motionManager isGyroAvailable]) &#123;</div><div class="line">    // 设置陀螺仪频率</div><div class="line">    [_motionManager setGyroUpdateInterval:1 / 40.0];</div><div class="line">    //开始采样数据</div><div class="line">    [_motionManager startGyroUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMGyroData *gyroData, NSError *error) &#123;</div><div class="line">        NSLog(@&quot;%f---%f---%f&quot;,gyroData.rotationRate.x,gyroData.rotationRate.y,gyroData/rotationRate.z);</div><div class="line">    &#125;];</div><div class="line">&#125; else&#123;</div><div class="line">    NSLog(@&quot;设备不支持陀螺仪&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/15/untitled-1487148892347/" rel="next" title="IOS浏览控件之WKWebView">
+                <i class="fa fa-chevron-left"></i> IOS浏览控件之WKWebView
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/15/untitled-1487148955151/" rel="prev" title="IOS 10 新特性以及介绍-Notifications">
+                IOS 10 新特性以及介绍-Notifications <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/02/15/untitled-1487148938673/"
+           data-title="iOS感应器之加速度计和陀螺仪(CoreMotion)" data-url="http://yoursite.com/2017/02/15/untitled-1487148938673/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Developer Ops" />
+          <p class="site-author-name" itemprop="name">Developer Ops</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、什么是CoreMotion"><span class="nav-number">1.</span> <span class="nav-text">1、什么是CoreMotion</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Developer Ops</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jaly19870729"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

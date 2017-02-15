@@ -1,0 +1,759 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Developer iOS android" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="近段时间来，关于移动客户端方面的动态化解决方案有了不少。之前的JSPatch，滴滴的解决方法：DynamicCocoa，微信iOS开发团队的解决方案：OCS。而今天需要说道的是React Native。
+
+1. 背景首先简单介绍下滴滴和微信的解决方案。
+
+1.1 DynamicCocoaDynamicCocoa 可以让现有的 Objective-C 代码转换生成中间*代码（JS），下发后动态执行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS动态化之React Native">
+<meta property="og:url" content="http://yoursite.com/2017/02/15/untitled-1487148728924/index.html">
+<meta property="og:site_name" content="I'AM Developer">
+<meta property="og:description" content="近段时间来，关于移动客户端方面的动态化解决方案有了不少。之前的JSPatch，滴滴的解决方法：DynamicCocoa，微信iOS开发团队的解决方案：OCS。而今天需要说道的是React Native。
+
+1. 背景首先简单介绍下滴滴和微信的解决方案。
+
+1.1 DynamicCocoaDynamicCocoa 可以让现有的 Objective-C 代码转换生成中间*代码（JS），下发后动态执行">
+<meta property="og:updated_time" content="2017-02-15T08:53:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS动态化之React Native">
+<meta name="twitter:description" content="近段时间来，关于移动客户端方面的动态化解决方案有了不少。之前的JSPatch，滴滴的解决方法：DynamicCocoa，微信iOS开发团队的解决方案：OCS。而今天需要说道的是React Native。
+
+1. 背景首先简单介绍下滴滴和微信的解决方案。
+
+1.1 DynamicCocoaDynamicCocoa 可以让现有的 Objective-C 代码转换生成中间*代码（JS），下发后动态执行">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> iOS动态化之React Native | I'AM Developer </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=60747891";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">I'AM Developer</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS动态化之React Native
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-15T16:52:08+08:00" content="2017-02-15">
+              2017-02-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/02/15/untitled-1487148728924/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/15/untitled-1487148728924/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>近段时间来，关于移动客户端方面的动态化解决方案有了不少。之前的JSPatch，滴滴的解决方法：DynamicCocoa，微信iOS开发团队的解决方案：OCS。而今天需要说道的是React Native。</p>
+</blockquote>
+<h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><p>首先简单介绍下滴滴和微信的解决方案。</p>
+<ul>
+<li><p>1.1 DynamicCocoa<br><strong>DynamicCocoa</strong> 可以让现有的 Objective-C 代码转换生成中间*代码（JS），下发后动态执行，相比其他动态化方案，优势在于：</p>
+<ul>
+<li>使用原生技术栈：使用者完全不用接触到 JS 或任何中间代码，保持原生的 Objective-C 开发、调试方式不变</li>
+<li>无需重写已有代码：已有 native 模块能很方便的变成动态化插件</li>
+<li>语法支持完备性高：支持绝大多数日常开发中用到的语法，不用担心这不支持那不支持</li>
+<li>支持 HotPatch<strong>：</strong>改完 bug 后直接从源码打出 patch，一站式解决动态化和热修复需</li>
+</ul>
+<p>最重要DynamicCocoa有一下特点：</p>
+<ul>
+<li><strong>完整的 Class 定义</strong>：interface、category、class extension、method、property，最重要的是支持完备的 ivar 定义，保持和 native 完全一致的实例内存结构</li>
+<li><strong>ARC</strong>：可以正确处理 strong、weak、unsafe_unretained 等对象的引用计数，对象的 ivar 也可以正确的释放</li>
+<li><strong>C 函数</strong>：支持 C 函数的定义与 C 函数的调用、内联函数的调用</li>
+<li><strong>可变参数</strong>：支持 C 与 OC 的可变参数方法的调用，如 NSLog</li>
+<li><strong>struct</strong>：支持任意结构体的使用，无需额外处理</li>
+<li><strong>block</strong>：支持创建和调用任意参数类型的 block</li>
+<li><strong>其他 OC 特性：</strong>如 @selector、@protocol、@encode、for..in 等</li>
+<li><strong>其他 C 特性</strong>：支持使用宏、static 变量、全局变量，取地址等</li>
+</ul>
+<p>ps:<a href="http://mp.weixin.qq.com/s/qRW_akbU3TSd0SxpF3iQmQ" target="_blank" rel="external">DynamicCocoa完整介绍</a></p>
+</li>
+<li><p>1.2 OCS<br>OCS是全新设计的iOS动态化方案。我们定义了一套精确描述OC语义的字节码指令集(OCScript)，开发了一套全自动编译器（OCSCompiler），实现了一个高性能的虚拟机（OCSVM）以及一个可以跟底层无缝对接的桥接器(OCSBridge)。我们首先使用OCS编译器把OC源码转化成OCS字节码，然后通过OCS桥接器实现OCS虚拟机与Native运行时的互联，最后使用OCS虚拟机对OCS字节码进行解释运算，并驱动Native运行时完成逻辑的执行，以此达到Native代码动态化的效果。OCS被用于iOS APP安装包减包、功能插件化、HotPatch等方方面面动态化需求。</p>
+<ul>
+<li>OCS有哪些与众不同之处<ul>
+<li>语义与OC保持严格一致<br>OCS字节码指令集语义与OC/的语义保持严格一一对应关系，支持的数据类型也完全等同，运行过程无需进行任何转换，因此效率非常高。</li>
+<li>自动化工具支持<br>OCS拥有完善的自动化工具链，OCS编译器支持绝大多数OC/C语法的转化，包括C方法、任意自定义结构体、任意自定义block。对于少数不支持的的语法，可以准确报错，引导用户进行规避，避免产生未定义行为。OCS编译器还可以准确识别OC/C代码的内存管理语义，可以正确生成内存管理相关的代码。特别对于ARC来说，可以准确生成Retain、Release代码，正确插入到生成代码中去。</li>
+<li>原生OC内存管理机制<br>OCS虚拟机完全支持Native的内存管理机制，可以在正确的时机执行正确的内存释放逻辑，绝无延迟操作，彻底杜绝了Crash和爆内存风险的引入。</li>
+<li>抢占式多线程<br>OCS虚拟机支持Native的抢占式多线程线程管理支持，完全支持Pthread、 GCD、 NSOperationqueue、 NSThread等各种线程模型，完全避免了额外引入Crash、卡顿与死锁风险。</li>
+<li>高性能汇编ABI<br>OCS桥接器根据过程调用约定实现自定义OCSABI，使得虚拟机与Native底层实现直接通信，保证Native代码动态化引入额外性能损耗最小化，使得OCS动态化不仅普遍适用于普通逻辑转化，对于对性能要求苛刻的有复杂排版的滑动列表，OCS也有极佳的表现，动态化后掉帧率增长量几乎可以忽略不计</li>
+</ul>
+</li>
+</ul>
+<p>ps:<a href="http://mp.weixin.qq.com/s/zctwM2Wf8c6_sxT_0yZvXg" target="_blank" rel="external">OCS完整介绍</a></p>
+</li>
+<li><p>1.3 ReactNative<br>React Native 让开发者使用 JavaScript 和 React 编写应用，利用相同的核心代码就可以创建 Web，iOS 和 Android 平台的原生应用。React Native 的宗旨是，学习一次，高效编写跨平台原生应用。</p>
+<ul>
+<li><p>React Native有什么优点</p>
+<ul>
+<li><strong>提供了原生的控件支持</strong><br>使用 React Native 你可以使用原生的控件，入在iOS平台我们可以使用UITabBar控件，在Android平台我们可以使用Drawer控件。这样，就让我们的App从使用上和视觉上拥有像原生App一样的体验。而且使用起来也非常简单。</li>
+<li><p><strong>异步执行</strong><br>所有的JavaScript逻辑与原生的代码逻辑都是在异步中执行的。原生的代码逻辑当然也可以添加自己的额外的线程。<br>这个特性意味着，我们可以将图片解码过程的线程从主线程中抽离出来，在后台线程将其保存在磁盘中，在不影响UI的情况下计算调整布局等等。</p>
+<blockquote>
+<p>所以，这些让React Native开发出来的App都是较为的流畅。<br>这个之间的通信过程也是有序列化来完成的，这个就让我们可以使用Chrome Developer Tools 来完成JavaScript逻辑的调试，当然我们也能够在模拟器和物理设备上调试。</p>
+</blockquote>
+</li>
+<li><p><strong>触屏处理</strong> React Native实现了高性能的图层点击与接触处理。</p>
+</li>
+<li><strong>Flexbox的布局样式</strong> 使布局将变得更简单，这就使我们为什么要将网页的布局模式切换到React Native的Flexbox布局模式。Flexbox让UI布局变得简单，入使用margin和padding的嵌套模式。当然，React Native 同样也支持网页原生的一些属性布局模式，如FontWeight之类的。这些声明的布局和样式，都会存在内联的机制将其优化。</li>
+<li><strong>Polyfills机制</strong> React Native也支持我们使用第三方的JavaScript库，来方便我们的开发。支持npm中的成千上万的模块。</li>
+<li><strong>基于React JS</strong> 拥有React JS的优良特性。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-抉择"><a href="#2-抉择" class="headerlink" title="2. 抉择"></a>2. 抉择</h2><p>通过上面的简单介绍，可以看出DynamicCocoa和OCS都还是很厉害的。对于iOS开发人员，可以不需要去花费过多的时间来学习其他语言，使用原生的Object-C也可以基本完成动态化。然后在实际开发中，以及实际的项目中，功能不仅仅是在iOS平台上面，同时在Android中也需要。这个时候就比较尴尬了。但是ReactNative却不一样，他是跨平台的，可以同时支持iOS和Android，同时可以达到原生的效果（虽然和其他两个的性能上还是有些差距），而且现在的手机性能都在不断提升，利弊权衡下，个人觉得ReactNative相对是更优选择。</p>
+<h2 id="3-ReactNative应用"><a href="#3-ReactNative应用" class="headerlink" title="3. ReactNative应用"></a>3. ReactNative应用</h2><blockquote>
+<p> 这里主要相对于现有工程</p>
+</blockquote>
+<ul>
+<li><p>3.1 在现有工程中添加ReactNative<br>条件:</p>
+<ul>
+<li>1、CocoaPods</li>
+<li>2、Node.js</li>
+</ul>
+<p>步骤:</p>
+<ul>
+<li>1、工程根目录下创建ReactComponent</li>
+<li><p>2、在ReactComponent目录中创建JS文件（例如:index.ios.js），并初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm init</div></pre></td></tr></table></figure>
+</li>
+<li><p>3、通过CocoaPods安装ReactNative库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">def react_native</div><div class="line">    # 取决于你的工程如何组织，你的node_modules文件夹可能会在别的地方。</div><div class="line">    # 请将:path后面的内容修改为正确的路径（一定要确保正确～～）。</div><div class="line">    pod &apos;React&apos;, :path =&gt; ‘./ReactComponent/node_modules/react-native&apos;, :subspecs =&gt; [</div><div class="line">    &apos;Core&apos;,</div><div class="line">    &apos;ART&apos;,</div><div class="line">    &apos;RCTActionSheet&apos;,</div><div class="line">    &apos;RCTAdSupport&apos;,</div><div class="line">    &apos;RCTGeolocation&apos;,</div><div class="line">    &apos;RCTImage&apos;,</div><div class="line">    &apos;RCTNetwork&apos;,</div><div class="line">    &apos;RCTPushNotification&apos;,</div><div class="line">    &apos;RCTSettings&apos;,</div><div class="line">    &apos;RCTText&apos;,</div><div class="line">    &apos;RCTVibration&apos;,</div><div class="line">    &apos;RCTWebSocket&apos;,</div><div class="line">    &apos;RCTLinkingIOS&apos;,</div><div class="line">    ]</div><div class="line">end</div></pre></td></tr></table></figure>
+</li>
+<li><p>4、执行CocoaPods</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod install</div></pre></td></tr></table></figure>
+</li>
+<li><p>5、添加原生代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">NSString * strUrl = @&quot;http://127.0.0.1:8081/index.ios.bundle?platform=ios&amp;dev=true&quot;;</div><div class="line">    NSURL * jsCodeLocation = [NSURL URLWithString:strUrl];</div><div class="line">    </div><div class="line">    RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation</div><div class="line">                                                        moduleName:@&quot;AwesomeProject&quot;</div><div class="line">                                                 initialProperties:nil</div><div class="line">                                                     launchOptions:nil];</div><div class="line">    self.view = rootView;</div></pre></td></tr></table></figure>
+</li>
+<li><p>6、运行react</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm start</div></pre></td></tr></table></figure>
+</li>
+<li><p>7、运行原生应用(Run)</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-ReactNative发布"><a href="#4-ReactNative发布" class="headerlink" title="4. ReactNative发布"></a>4. ReactNative发布</h2><p>在技术上来讲当然可以把react程序放在服务器上，但是加载速度就比较慢，在用户体验上当然也会减分不少。因此可以通过打离线包(jsbundle)的方式,通过服务端控制来实现程序的动态化（类似JSPatch发布机制）。</p>
+<ul>
+<li><p>ReactNative离线打包<br>我们用‘react-native bundle’命令把JS代码打包成一个bundle文件。然后客户端直接访问这个bundle文件即可。</p>
+<h5 id="命令说明"><a href="#命令说明" class="headerlink" title="命令说明"></a>命令说明</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">react-native bundle</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Options:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令</th>
+<th style="text-align:left">枚举</th>
+<th style="text-align:left">解释 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"> –entry-file</td>
+<td style="text-align:left">index.ios.js</td>
+<td style="text-align:left">入口文件</td>
+</tr>
+<tr>
+<td style="text-align:left"> –platform</td>
+<td style="text-align:left">“ios”/“android”</td>
+<td style="text-align:left">平台</td>
+</tr>
+<tr>
+<td style="text-align:left"> –transformer</td>
+<td style="text-align:left">/packager/transformer.js</td>
+<td style="text-align:left">transformer</td>
+</tr>
+<tr>
+<td style="text-align:left"> –dev</td>
+<td style="text-align:left">false /true</td>
+<td style="text-align:left">调试开关</td>
+</tr>
+<tr>
+<td style="text-align:left"> –prepack</td>
+<td style="text-align:left">false/true</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"> –bridge-config</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"> –bundle-output</td>
+<td style="text-align:left">路径</td>
+<td style="text-align:left">bundle包目标路径</td>
+</tr>
+<tr>
+<td style="text-align:left"> –assets-dest</td>
+<td style="text-align:left">资源文件路径</td>
+<td style="text-align:left">资源文件路径</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>修改原生代码<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NSURL * jsCodeLocation = [[NSBundle mainBundle ] URLForResource:@&quot;main&quot; withExtension:@&quot;jsbundle&quot;];</div><div class="line">RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation moduleName:@&quot;AwesomeProject&quot; initialProperties:nil launchOptions:nil];</div><div class="line">self.view = rootView;</div></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/15/untitled-1487148858583/" rel="prev" title="iOS持续集成之自动更新设备">
+                iOS持续集成之自动更新设备 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/02/15/untitled-1487148728924/"
+           data-title="iOS动态化之React Native" data-url="http://yoursite.com/2017/02/15/untitled-1487148728924/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Developer Ops" />
+          <p class="site-author-name" itemprop="name">Developer Ops</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-背景"><span class="nav-number">1.</span> <span class="nav-text">1. 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-抉择"><span class="nav-number">2.</span> <span class="nav-text">2. 抉择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-ReactNative应用"><span class="nav-number">3.</span> <span class="nav-text">3. ReactNative应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-ReactNative发布"><span class="nav-number">4.</span> <span class="nav-text">4. ReactNative发布</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#命令说明"><span class="nav-number">4.0.0.1.</span> <span class="nav-text">命令说明</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Developer Ops</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jaly19870729"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
